@@ -1,0 +1,233 @@
+<div class="container">
+    <br>
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="projectNameId" class="form-control-label">
+                <h6>Project:</h6>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-9 col-lg-9">
+            <input type="text" class="form-control"
+                   id="projectNameId" name="projectNameField"
+                   [(ngModel)] = "projectData.projectName"
+                   required #nameField = "ngModel"
+                   [class.field-error] = "form.submitted && nameField.invalid">
+                   <div class="alert alert-danger"
+                   [hidden] = "!form.submitted || nameField.valid">
+                  Please provide Project Title
+              </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            
+        </div>
+        <div class="col-12 col-sm-12 col-md-3 col-lg-3 align-self-center">
+            <div class="form-check-inline" *ngIf="!updateIndicator">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input"
+                           (click)="toggleProjectDateEnabled()">
+                    Set Start and End Date
+                </label>
+            </div>
+            <div class="form-check-inline" *ngIf="updateIndicator">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" checked="checked">
+                    Set Start and End Date
+                </label>
+            </div>
+        </div>
+        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                <input type="text"
+                       placeholder="Enter Start Date"
+                       class="form-control"
+                       *ngIf="!projectDateEnabled && !updateIndicator"
+                       readonly>
+                <input type="text"
+                    placeholder="Enter Start Date"
+                    class="form-control"
+                    bsDatepicker
+                    [bsConfig]="{ adaptivePosition: true }"
+                    id="projectStartDateId"
+                    name="projectStartDateField"
+                    *ngIf="projectDateEnabled && !updateIndicator"
+                    [(ngModel)]="projectData.projectStartDate">
+                <input type="text"
+                    placeholder="Enter Start Date"
+                    class="form-control"
+                    bsDatepicker
+                    [bsConfig]="{ adaptivePosition: true }"
+                    id="updateProjectStartDateId"
+                    name="updateProjectStartDateField"
+                    *ngIf="updateIndicator"
+                    [(ngModel)]="projectData.projectStartDate">
+        </div>
+
+        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                <input type="text"
+                    placeholder="Enter End Date"
+                    class="form-control"
+                    *ngIf="!projectDateEnabled && !updateIndicator"
+                    readonly>
+                <input type="text"
+                    placeholder="Enter End Date"
+                    class="form-control"
+                    bsDatepicker
+                    [bsConfig]="{ adaptivePosition: true, minDate: projectData.startDate }"
+                    id="projectEndDateId"
+                    name="projectEndDateField"
+                    *ngIf="projectDateEnabled && !updateIndicator"
+                    [(ngModel)] = "projectData.projectEndDate"
+                    [class.field-error]="form.submitted && projectDateEnabled && !dateValid"
+                    >
+                <input type="text"
+                    placeholder="Enter End Date"
+                    class="form-control"
+                    bsDatepicker
+                    [bsConfig]="{ adaptivePosition: true, minDate: projectData.startDate }"
+                    id="updateProjectEndDateId"
+                    name="updateProjectEndDateField"
+                    *ngIf="updateIndicator"
+                    [(ngModel)] = "projectData.projectEndDate"
+                    [class.field-error]="form.submitted && projectDateEnabled && !dateValid"
+                    >
+                
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            
+        </div>
+        <div class="col-12 col-sm-12 col-md-3 col-lg-3 align-self-center">
+        </div>
+
+        <div [hidden] = "!form.submitted || !projectDateEnabled || (projectDateEnabled && dateValid)"
+             class="alert alert-danger col-12 col-sm-12 col-md-6 col-lg-6">
+            End Date Smaller Than Start Date
+        </div>
+    </div>
+
+    <br>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+                <label for="priorityProjectId">
+                    <b>Priority:</b>
+                </label>
+        </div>
+        <div class="col-1 col-sm-1 col-md-1 col-lg-1">
+            0
+        </div>
+        <div class="col-10 col-sm-10 col-md-8 col-lg-7">
+            <input type="range" class="custom-range" 
+                   id="priorityProjectId" name="priorityProjectField"
+                   [(ngModel)] = "projectData.priority"
+                   min=0 max=30 step="1" value=0 [(ngModel)]="projectData.priority">
+        </div>
+        <div class="col-1 col-sm-1 col-md-1 col-lg-1">
+            30
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 align-self-center">
+            <label for="addUserId">
+                <b>Manager:</b>
+            </label>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+            <input type="text" class="form-control" 
+                   id="addUserId" name="addUserField"
+                   [(ngModel)] = "managerName"
+                   readonly>
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button class="btn btn-success btn-block" type="button"
+            (click)="openModal(template)">
+                Add Manager
+            </button>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="form-group row">
+            <button 
+                class="btn btn-primary ml-auto mr-2 col-5 col-sm-5 col-md-4 col-lg-3" 
+                type="submit"
+                *ngIf="!updateIndicator">
+                Add Project
+            </button>
+            <button 
+                class="btn btn-primary ml-auto mr-2 col-5 col-sm-5 col-md-4 col-lg-3" 
+                type="submit"
+                *ngIf="updateIndicator">
+                Update Project
+            </button>
+            <button 
+                class="btn btn-danger mr-auto col-5 col-sm-5 col-md-4 col-lg-3" 
+                type="reset" (click)="resetFields()">
+                Reset
+            </button>
+    </div>
+    <notifier-container></notifier-container>
+</form>
+
+</div>
+
+<ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add Manager</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                <input type="text" class="form-control" id="searchUserFieldId" 
+                       placeholder="Search User"
+                       [formControl]="queryField">
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-success" type="button"
+                        (click)="searchUser()">
+                    Search
+                </button>
+            </div>
+        </div>
+        <br>
+
+
+        <ul class="list-group listoverflow" *ngIf="searchList.length > 0">
+            <li class="list-group-item list-group-item-action" *ngFor="let user of searchList;index as i">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Name: </b> {{ user.firstName }} {{ user.lastName }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <b>Employee ID: </b> {{ user.employeeId }}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                        <button type="button" class="btn btn-primary"
+                                (click)="addManager(i);modalRef.hide()">
+                            Select
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <h5 class="text-center" *ngIf="searchList.length == 0">No Records Found</h5>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" 
+              aria-label="Close" (click)="modalRef.hide()">
+          Close
+      </button>
+    </div>
+  </ng-template>

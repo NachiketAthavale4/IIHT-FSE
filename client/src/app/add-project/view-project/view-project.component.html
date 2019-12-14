@@ -1,0 +1,127 @@
+<div class="container">
+    <app-create-project
+        [ediProjectId]="updateProjectId"
+        [editProjectName]="updateProjectName"
+        [editPriorty]="updateProjectPriority"
+        [editStartDate]="updateProjectStartDate"
+        [editEndDate]="updateProjectEndDate"
+        [editManagedBy]="updateProjectManager"
+        [UpdateActive]="UpdateActive"
+        (notify) = "onNotify($event)">
+
+    </app-create-project>
+    <hr>
+    <br>
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+            <input class="form-control" id="projectNameFieldId" 
+                   name="projectNameField" placeholder="Search Projects"
+                   [formControl]="queryField">
+        </div>
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <button type="button" class="btn btn-success btn-block"
+                    (click)="searchUser()">
+                Search
+            </button>
+        </div>
+        <div class="col-12 col-sm-12 col-md-1 col-lg-1 align-self-center">
+            <b>Sort:</b>
+        </div>
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortStartDate()">
+                Start Date
+            </button>
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortEndDate()">
+                End Date
+            </button>
+        </div>
+        <div class="col-6 col-sm-6 col-md-2 col-lg-2">
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortPriority()">
+                Priority
+            </button>
+            <button type="button" class="btn btn-secondary btn-block btn-sm"
+                    (click)="sortCompleted()">
+                Completed
+            </button>
+        </div>
+    </div>
+
+    <br>
+
+    <ul class="list-group" *ngIf="searchList">
+        <li class="list-group-item" *ngFor="let project of searchList;index as i">
+            <div class="row">
+                <div class="col-8 col-sm-8 col-md-8 col-lg-8">
+                    <div class="form-group row">
+                        <b class="ml-3">Project: </b> 
+                        <span class="ml-2">{{ project.projectName }}</span>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                            <b>No. of Tasks:</b>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                            {{ project.noOfTasks }}
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                            <b>Completed:</b>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                            {{ project.noOfCompletedTasks }}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                            <b>Start Date:</b>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                            {{ project.projectStartDate | date }}
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                            <b>End Date:</b>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                            {{ project.projectEndDate | date }}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+                    <div class="row">
+                        <b class="ml-3">Priority: </b> 
+                    </div>
+                    <div class="row">
+                        <span class="ml-3">{{ project.priority }}</span>
+                    </div>
+                </div>
+                <div class="col-4 col-sm-4 col-md-2 col-lg-2 align-self-center">
+                    <button class="btn btn-success btn-block" 
+                            type="button"
+                            (click)="editProject(i)"
+                            *ngIf="updateProjectIndex == null">
+                        Update
+                    </button>
+                    <button class="btn btn-success btn-block" 
+                            type="button"
+                            (click)="editProject(i)"
+                            *ngIf="updateProjectIndex != null"
+                            disabled>
+                        Update
+                    </button>
+                    <button class="btn btn-danger btn-block" 
+                            type="button"
+                            (click)="suspend(i)">
+                        Suspend
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <h5 class="text-center" *ngIf="searchList == null || searchList.length == 0">No Records Found</h5>
+    <notifier-container></notifier-container>
+</div>
